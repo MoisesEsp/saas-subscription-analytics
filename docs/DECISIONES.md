@@ -58,7 +58,7 @@
 ## ADR-005 — Git por HTTPS en lugar de SSH
 
 - **Fecha:** 2026-10-15
-- **Estado:** Aceptada
+- **Estado:** Reemplazada por ADR-012
 - **Contexto:** El desarrollador no tiene configurado SSH.
 - **Decisión:** Usar HTTPS con Personal Access Token.
 - **Consecuencias:** Ligeramente más fricción al hacer push (pide token).
@@ -154,3 +154,17 @@
   comportamiento. Si se necesita, se añadirá un lock file con `pip-tools`,
   `uv` o `poetry`. Para el driver se usa el extra `psycopg[binary]`, que
   instala `psycopg` + `psycopg-binary` en la misma versión.
+
+## ADR-012 — Migrar la autenticación de Git de HTTPS a SSH
+
+- **Fecha:** 2026-10-19
+- **Estado:** Aceptada (reemplaza ADR-005)
+- **Contexto:** Con HTTPS, cada `push` exige el Personal Access Token. El
+  desarrollador ya disponía de una clave SSH `ed25519` y prefirió usarla.
+- **Decisión:** Autenticación por **SSH** con clave `ed25519`. Remoto:
+  `git@github.com:MoisesEsp/saas-subscription-analytics.git`.
+- **Consecuencias:** No se solicita token en cada push. La clave privada
+  (`~/.ssh/id_ed25519`) nunca debe compartirse ni versionarse; solo la
+  pública (`id_ed25519.pub`) se registra en GitHub. Verificado con
+  `ssh -T git@github.com` → autenticación correcta (el código de salida 1 es
+  normal porque GitHub no ofrece shell).

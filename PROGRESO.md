@@ -81,4 +81,18 @@
   psycopg 3.3.6).
 - Imagen final `saas-etl:dev` ≈ 490 MB.
 
-*(Siguiente entrada al cerrar 0.7)*
+## 2026-10-19 — Fase 0.7 cerrada
+
+- Creado `.gitignore` con `.env`, `data/*`, `__pycache__/`, `.venv/`,
+  `.ipynb_checkpoints/`, etc.
+- Verificado con `git check-ignore -v docker/.env` que `.env` se ignora y
+  que `.env.example` sí se versiona.
+- Escaneado el historial completo: `.env` nunca fue commiteado y ninguna
+  contraseña ni `SUPERSET_SECRET_KEY` aparece en él.
+- Primer commit `697e66c` subido a GitHub (22 archivos).
+- Autenticación migrada de HTTPS a SSH con clave `ed25519` (ADR-012,
+  reemplaza ADR-005). `ssh -T git@github.com` verificado.
+- `AGENTS.md` actualizado a SSH (con permiso del usuario).
+- `README.md` subido vacío (opción A); se completará en Fase 5.
+
+*(Siguiente entrada al cerrar 0.8)*

@@ -4,9 +4,9 @@
 > tomadas, el progreso actual y el siguiente paso a ejecutar. Se actualiza al
 > finalizar cada sub-paso.
 >
-> **Para reanudar rápido:** Fase 0, paso 0.6 cerrado.
-> Siguiente paso: 0.7 (`.gitignore` + primer commit + push).
-> **Atención:** `.env` aún no está protegido; se resuelve en este paso.
+> **Para reanudar rápido:** Fase 0, paso 0.7 cerrado.
+> Siguiente paso: 0.8 (primer arranque del stack).
+> `.env` protegido y primer push realizado (commit `697e66c`).
 >
 > Última actualización: 2026-10-19
 
@@ -17,10 +17,10 @@
 Si solo tienes 30 segundos, lee esto:
 
 - **Fase actual:** 0 — Configuración del Entorno con Docker
-- **Sub-paso en curso:** 0.7 — `.gitignore` y primer commit + push
-- **Completado:** 0.1, 0.2, 0.3, 0.4, 0.5, 0.6
-- **Pendiente en este paso:** crear `.gitignore` (proteger `.env`), primer commit y push
-- **Siguiente paso al cerrar 0.7:** 0.8 — Primer arranque del stack
+- **Sub-paso en curso:** 0.8 — Primer arranque del stack (postgres + pgadmin)
+- **Completado:** 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7
+- **Pendiente en este paso:** levantar el stack y comprobar que ambos servicios arrancan
+- **Siguiente paso al cerrar 0.8:** 0.9 — Verificación de persistencia y conexión pgAdmin → Postgres
 
 ---
 
@@ -54,7 +54,7 @@ con Superset.
 | Driver PostgreSQL | `psycopg` v3 (NO `psycopg2`) | Compatible con Python 3.14 local | Decidido |
 | Orquestación | Docker + Docker Compose v5 | Reproducibilidad y portabilidad | Instalado |
 | BI / Visualización | Apache Superset (contenedor) | Open-source, Linux-friendly, encaja con stack técnico | Por levantar |
-| Control de versiones | Git + GitHub (HTTPS) | Estándar universal | Configurado |
+| Control de versiones | Git + GitHub (SSH) | Estándar universal | Configurado |
 | Licencia | MIT | Permisiva, estándar en portafolios | Pendiente crear |
 
 ### Detalles del entorno del desarrollador
@@ -66,7 +66,7 @@ con Superset.
 - **Git:** 2.56.0
 - **Ruta del proyecto local:** `~/Proyectos/saas-subscription-analytics`
 - **Repo GitHub:** cuenta profesional ya existente, con otros proyectos
-- **Autenticación Git:** HTTPS (no SSH, por decisión del desarrollador)
+- **Autenticación Git:** SSH con clave `ed25519` (migrado desde HTTPS el 2026-10-19, ver ADR-012)
 
 ---
 
@@ -116,7 +116,7 @@ saas-subscription-analytics/
 - **0.4** Diseño del `docker-compose.yml` → ✅ COMPLETADO
 - **0.5** Diseño del `Dockerfile` de Python → ✅ COMPLETADO
 - **0.6** `requirements.txt` inicial con versiones pinneadas → ✅ COMPLETADO
-- **0.7** `.gitignore` y primer commit + push → ⬜ Pendiente
+- **0.7** `.gitignore` y primer commit + push → ✅ COMPLETADO
 - **0.8** Primer arranque del stack (postgres + pgadmin) → ⬜ Pendiente
 - **0.9** Verificación de persistencia y conexión pgAdmin → Postgres → ⬜ Pendiente
 
@@ -158,7 +158,7 @@ saas-subscription-analytics/
 
 ## 5. Estado Actual Detallado
 
-**Fase en curso:** 0.7 — `.gitignore` y primer commit + push
+**Fase en curso:** 0.8 — Primer arranque del stack (postgres + pgadmin)
 
 **Ya completado:**
 - ✅ Docker, Compose, Git, Python, DBeaver, VS Code instalados y verificados
@@ -212,9 +212,16 @@ saas-subscription-analytics/
 - ✅ Entendido: se pinean dependencias directas; las transitivas las resuelve
   `pip` (para reproducibilidad total se usaría un lock file tipo pip-tools/uv)
 
-**Pendiente conocido (no bloqueante, se aborda en 0.7):**
-- ⬜ `.gitignore` vacío: `docker/.env` aún no está protegido. NO ejecutar
-  `git add .` hasta que se resuelva en el paso 0.7.
+**Cerrado en el paso 0.7 (2026-10-19):**
+- ✅ `.gitignore` creado con `.env`, `data/*`, `__pycache__/`, `.venv/`, etc.
+- ✅ Verificado que `.env` se ignora y que `.env.example` sí se versiona
+- ✅ Escaneado el historial completo: ninguna credencial real commiteada
+- ✅ Primer commit `697e66c` subido a GitHub (22 archivos)
+- ✅ Autenticación migrada de HTTPS a SSH (ADR-012)
+- ✅ `README.md` subido vacío (opción A; se completará en Fase 5)
+
+**Resuelto en el paso 0.7:**
+- ✅ `.gitignore` ya protege `docker/.env`. Ya es seguro usar `git add .`.
 
 **Decisiones tomadas en este paso:**
 - Variables agrupadas por servicio con comentarios separadores
@@ -223,7 +230,7 @@ saas-subscription-analytics/
 - Distinción clara entre `POSTGRES_HOST_PORT` (host) y `POSTGRES_PORT` (interno Docker)
 - Aplazar la protección de `.env` en `.gitignore` al paso 0.7 (ver ADR-008)
 
-**Siguiente paso al cerrar 0.7:** 0.8 — Primer arranque del stack (postgres + pgadmin)
+**Siguiente paso al cerrar 0.8:** 0.9 — Verificación de persistencia y conexión pgAdmin → Postgres
 
 ---
 
@@ -253,7 +260,8 @@ saas-subscription-analytics/
 | 2026-10-15 | Superset en lugar de Power BI | Linux-friendly, open-source, se integra en Docker |
 | 2026-10-15 | `psycopg` v3 en lugar de `psycopg2` | Python 3.14 local no soporta wheels de psycopg2 |
 | 2026-10-15 | Python del pipeline en contenedor 3.11 | Aislar del Python 3.14 local, más estable para libs |
-| 2026-10-15 | Git por HTTPS, no SSH | Preferencia del desarrollador |
+| 2026-10-15 | Git por HTTPS, no SSH | Preferencia del desarrollador (reemplazada el 2026-10-19) |
+| 2026-10-19 | Migración de Git HTTPS a SSH | Evitar el PAT en cada push; clave `ed25519` configurada (ADR-012) |
 | 2026-10-15 | Licencia MIT | Permisiva, estándar en portafolios |
 | 2026-10-15 | Crear `AGENTS.md` y archivos guía versionados | Preservar contexto entre sesiones y agentes |
 

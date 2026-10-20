@@ -137,7 +137,7 @@ Datos clave del proyecto (no preguntar de nuevo):
 - **`psycopg` v3** (NO `psycopg2`).
 - **Apache Superset** como BI (reemplaza Power BI).
 - **DBeaver** como cliente SQL nativo.
-- **Git por HTTPS**, no SSH.
+- **Git por SSH**, no HTTPS.
 - Ruta del proyecto: `~/Proyectos/saas-subscription-analytics`.
 - Repo GitHub con cuenta profesional existente.
 - **Nunca** subir `.env` a Git.
