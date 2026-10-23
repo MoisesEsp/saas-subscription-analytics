@@ -4,11 +4,11 @@
 > tomadas, el progreso actual y el siguiente paso a ejecutar. Se actualiza al
 > finalizar cada sub-paso.
 >
-> **Para reanudar rápido:** Fase 0, paso 0.7 cerrado.
-> Siguiente paso: 0.8 (primer arranque del stack).
-> `.env` protegido y primer push realizado (commit `697e66c`).
+> **Para reanudar rápido:** Fase 0 cerrada por completo (0.1–0.9).
+> Siguiente: Fase 1 — Ingesta y generación de datos sintéticos.
+> Stack operativo: postgres (`5433`), pgadmin (`5050`), persistencia verificada.
 >
-> Última actualización: 2026-10-19
+> Última actualización: 2026-10-22
 
 ---
 
@@ -16,11 +16,11 @@
 
 Si solo tienes 30 segundos, lee esto:
 
-- **Fase actual:** 0 — Configuración del Entorno con Docker
-- **Sub-paso en curso:** 0.8 — Primer arranque del stack (postgres + pgadmin)
-- **Completado:** 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7
-- **Pendiente en este paso:** levantar el stack y comprobar que ambos servicios arrancan
-- **Siguiente paso al cerrar 0.8:** 0.9 — Verificación de persistencia y conexión pgAdmin → Postgres
+- **Fase actual:** 1 — Ingesta y generación de datos sintéticos
+- **Sub-paso en curso:** por definir (propuesta de desglose pendiente de confirmación)
+- **Completado:** Fase 0 completa (0.1–0.9)
+- **Pendiente en este paso:** acordar el desglose de la Fase 1
+- **Siguiente paso:** 1.1 — Diseño del modelo de datos
 
 ---
 
@@ -117,8 +117,8 @@ saas-subscription-analytics/
 - **0.5** Diseño del `Dockerfile` de Python → ✅ COMPLETADO
 - **0.6** `requirements.txt` inicial con versiones pinneadas → ✅ COMPLETADO
 - **0.7** `.gitignore` y primer commit + push → ✅ COMPLETADO
-- **0.8** Primer arranque del stack (postgres + pgadmin) → ⬜ Pendiente
-- **0.9** Verificación de persistencia y conexión pgAdmin → Postgres → ⬜ Pendiente
+- **0.8** Primer arranque del stack (postgres + pgadmin) → ✅ COMPLETADO
+- **0.9** Verificación de persistencia y conexión pgAdmin → Postgres → ✅ COMPLETADO
 
 ### FASE 1 — Ingesta y Generación de Datos Sintéticos
 - Diseño del modelo de datos (dim_users, dim_plans, dim_dates, stg_subscription_events)
@@ -158,7 +158,7 @@ saas-subscription-analytics/
 
 ## 5. Estado Actual Detallado
 
-**Fase en curso:** 0.8 — Primer arranque del stack (postgres + pgadmin)
+**Fase en curso:** 1 — Ingesta y generación de datos sintéticos (desglose por confirmar)
 
 **Ya completado:**
 - ✅ Docker, Compose, Git, Python, DBeaver, VS Code instalados y verificados
@@ -223,6 +223,21 @@ saas-subscription-analytics/
 **Resuelto en el paso 0.7:**
 - ✅ `.gitignore` ya protege `docker/.env`. Ya es seguro usar `git add .`.
 
+**Cerrado en el paso 0.8 (2026-10-20):**
+- ✅ `docker compose up -d` levanta el stack correctamente
+- ✅ `postgres` Up en `5433->5432`; log `database system is ready to accept connections`
+- ✅ `pgadmin` Up en `5050->80`; login accesible en `http://localhost:5050`
+- ✅ Comprendido `-d`, `down` vs `down -v`, y el error de escribir `up -d` sin `docker compose`
+- ⚠️ Detectado: el proyecto Compose se llama `docker` (contenedores `docker-*`). Se corregirá en 0.9
+
+**Cerrado en el paso 0.9 (2026-10-22):**
+- ✅ Proyecto Compose renombrado a `saas-analytics` (contenedores `saas-analytics-*`)
+- ✅ Volúmenes `saas-analytics_postgres_data` y `saas-analytics_pgadmin_data`
+- ✅ Persistencia verificada: un dato sobrevivió a `down` + `up` (sin `-v`)
+- ✅ pgAdmin conectado a Postgres con host `postgres`, puerto `5432`
+- ✅ Tabla de prueba visible desde pgAdmin y eliminada después
+- ✅ **FASE 0 COMPLETA (0.1–0.9)**
+
 **Decisiones tomadas en este paso:**
 - Variables agrupadas por servicio con comentarios separadores
 - Sin espacios alrededor de `=`
@@ -230,7 +245,7 @@ saas-subscription-analytics/
 - Distinción clara entre `POSTGRES_HOST_PORT` (host) y `POSTGRES_PORT` (interno Docker)
 - Aplazar la protección de `.env` en `.gitignore` al paso 0.7 (ver ADR-008)
 
-**Siguiente paso al cerrar 0.8:** 0.9 — Verificación de persistencia y conexión pgAdmin → Postgres
+**Siguiente paso:** definir el desglose de la Fase 1 y comenzar por el diseño del modelo de datos
 
 ---
 

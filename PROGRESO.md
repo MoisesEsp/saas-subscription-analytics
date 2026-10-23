@@ -95,4 +95,23 @@
 - `AGENTS.md` actualizado a SSH (con permiso del usuario).
 - `README.md` subido vacío (opción A); se completará en Fase 5.
 
-*(Siguiente entrada al cerrar 0.8)*
+## 2026-10-20 — Fase 0.8 cerrada
+
+- Primer arranque del stack con `docker compose up -d`.
+- `postgres` Up en `5433->5432`; log `database system is ready to accept connections`.
+- `pgadmin` Up en `5050->80`; login accesible en `http://localhost:5050`.
+- Puerto `5433` accesible desde el host.
+- Detectado que el proyecto Compose se llama `docker` (contenedores `docker-*`);
+  se fijará un nombre propio en 0.9.
+
+## 2026-10-22 — Fase 0.9 cerrada · FASE 0 COMPLETA
+
+- Proyecto Compose renombrado a `saas-analytics`; contenedores
+  `saas-analytics-*` y volúmenes `saas-analytics_*`.
+- Persistencia verificada: se creó `persistence_test`, se hizo `down` (sin
+  `-v`) y `up -d`, y el dato sobrevivió. Tabla de prueba eliminada.
+- pgAdmin conectado a Postgres usando host `postgres` y puerto `5432`
+  (no `localhost:5433`, que es el mapeo del host).
+- **Fase 0 (0.1–0.9) cerrada por completo.**
+
+*(Siguiente entrada al cerrar el primer sub-paso de la Fase 1)*
